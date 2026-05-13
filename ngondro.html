@@ -284,6 +284,7 @@
     flex-direction: column; gap: 16px; text-align: center; padding: 24px;
     backdrop-filter: blur(8px);
   }
+  .bell-banner[hidden] { display: none; }
   .bell-banner h2 { font-size: 22px; margin: 0 0 8px; color: #fff; }
   .bell-banner p { margin: 0; font-size: 14px; max-width: 360px; line-height: 1.5; opacity: .9; }
   .bell-banner button {
@@ -2756,6 +2757,18 @@ $("#bell-banner-ok").addEventListener("click", () => {
   // Wizard: state shamathaMin валиден
   assert(typeof state.shamathaMin === "number" && state.shamathaMin >= 3 && state.shamathaMin <= 30,
     `state.shamathaMin в [3..30] (есть ${state.shamathaMin})`);
+
+  // CSS [hidden] guard: элементы с display:flex/grid/block в CSS должны иметь
+  // явный override .selector[hidden] { display: none } — иначе атрибут hidden игнорируется.
+  // Регрессия 2026-05-13: bell-banner показывался при загрузке, потому что display:flex
+  // в .bell-banner перекрывал HTML-default display:none для [hidden].
+  ["#wizard-overlay","#bell-banner"].forEach(sel => {
+    const el = document.querySelector(sel);
+    if (el && el.hidden) {
+      const d = window.getComputedStyle(el).display;
+      assert(d === "none", `${sel}[hidden] → computed display="${d}" (ожидалось "none")`);
+    }
+  });
 
   // Report
   if (fails.length) {
