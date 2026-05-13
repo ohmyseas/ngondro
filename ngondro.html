@@ -160,13 +160,41 @@
   .prep-checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
   .prep-checklist li {
     background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
-    padding: 12px 14px;
+    overflow: hidden;
   }
   .prep-checklist label {
     display: flex; gap: 10px; align-items: flex-start; cursor: pointer;
     font-size: 14px; line-height: 1.45;
   }
   .prep-checklist input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; }
+  .prep-checklist details { width: 100%; }
+  .prep-checklist details > summary {
+    list-style: none;
+    padding: 12px 14px;
+    display: flex; gap: 10px; align-items: center;
+    cursor: pointer; user-select: none;
+    font-size: 14px; font-weight: 600; line-height: 1.4;
+    position: relative;
+  }
+  .prep-checklist details > summary::-webkit-details-marker { display: none; }
+  .prep-checklist details > summary::after {
+    content: "▾"; margin-left: auto; color: var(--ink-3);
+    font-size: 11px; transition: transform .2s;
+  }
+  .prep-checklist details[open] > summary::after { transform: rotate(180deg); }
+  .prep-checklist details > summary input[type="checkbox"] {
+    flex-shrink: 0; margin: 0;
+  }
+  .prep-checklist details > summary span { flex: 1; }
+  .prep-checklist details[open] > summary {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .prep-detail {
+    padding: 12px 14px;
+    font-size: 13px; line-height: 1.55; color: var(--ink-2);
+    background: var(--bg);
+  }
   .prep-stage {
     background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
     padding: 12px 14px; margin-bottom: 10px;
@@ -774,13 +802,44 @@
       <!-- Шаг 1: Приготовления -->
       <section class="wizard-step" data-step="1">
         <h2>1 · Приготовления</h2>
-        <p class="hint">Подготовь место и тело до начала тхуна. Не давай приготовлениям решать, делать тхун или нет — лучше сделать тхун без некоторых, чем отложить навсегда.</p>
+        <p class="hint">Подготовь место и тело до начала тхуна. Не давай приготовлениям решать, делать тхун или нет — лучше сделать тхун без некоторых, чем отложить навсегда. Нажми на любую строку, чтобы развернуть подробности из PDF.</p>
         <ul class="prep-checklist">
-          <li><label><input type="checkbox" data-prep="place"> Место чистое, свежий воздух и свет, звукоизоляция, ограничен доступ</label></li>
-          <li><label><input type="checkbox" data-prep="devices"> Телефон без звука; электрические, газовые, водные устройства выключены</label></li>
-          <li><label><input type="checkbox" data-prep="tools"> Подношения на алтаре, подушка / стул, чётки, тексты, часы</label></li>
-          <li><label><input type="checkbox" data-prep="body"> Туалет, нос, тёплая одежда, плед для ног, вода в чашке / термосе</label></li>
-          <li><label><input type="checkbox" data-prep="content"> Решено: какая медитация, сколько и как</label></li>
+          <li>
+            <details>
+              <summary><input type="checkbox" data-prep="busyness" onclick="event.stopPropagation()"> <span>Занятость</span></summary>
+              <div class="prep-detail">Позаботиться о том, чтобы не было потребности заниматься какими-либо иными занятиями помимо занятия тхуна.</div>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary><input type="checkbox" data-prep="place" onclick="event.stopPropagation()"> <span>Место</span></summary>
+              <div class="prep-detail">Убедиться в чистоте места, обеспечить помещение свежим воздухом и светом, позаботиться о звукоизоляции и ограничить доступ к месту медитации.</div>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary><input type="checkbox" data-prep="devices" onclick="event.stopPropagation()"> <span>Условия</span></summary>
+              <div class="prep-detail">Отключить звук у телефона и т. п. устройств, выключить активно работающие электрические, газовые и водные устройства (плиту, краны и т. п.).</div>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary><input type="checkbox" data-prep="tools" onclick="event.stopPropagation()"> <span>Инструменты</span></summary>
+              <div class="prep-detail">Подготовить подношения на алтаре, подушку / стул для сидения, чётки и иные инструменты, тексты для изучения и практики, часы.</div>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary><input type="checkbox" data-prep="body" onclick="event.stopPropagation()"> <span>Тело</span></summary>
+              <div class="prep-detail">Сходить в туалет, прочистить нос, одеться в удобную для сидения и тёплую одежду, подготовить плед для ног при необходимости, носовые платки, воду в чашке или термосе.</div>
+            </details>
+          </li>
+          <li>
+            <details>
+              <summary><input type="checkbox" data-prep="content" onclick="event.stopPropagation()"> <span>Содержание</span></summary>
+              <div class="prep-detail">Решить, какой медитации будет посвящён тхун, сколько он будет выполняться, сколько будет выполняться та или иная часть тхуна и тому подобное.</div>
+            </details>
+          </li>
         </ul>
       </section>
 
