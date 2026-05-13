@@ -2033,11 +2033,22 @@ function renderProgress() {
     html += `</div>`;
   }
   list.innerHTML = html;
-  // tap on attribute → open Reader on that attribute
+  // tap on attribute → open Reader on «Раздельные практики» sub-tab focused on that attribute
   list.querySelectorAll(".attr").forEach(el => el.onclick = () => {
     $("#text-pick").value = `${el.dataset.key}:${el.dataset.idx}`;
     showText();
     switchPane("text");
+    switchTextSub("recitations");
+  });
+}
+
+/* Программно переключить под-вкладку внутри «Практика нёндро». */
+function switchTextSub(name) {
+  $$(".text-subnav button").forEach(b => b.classList.toggle("active", b.dataset.textsub === name));
+  $$(".text-sub").forEach(s => {
+    const match = s.id === "text-sub-" + name;
+    s.classList.toggle("active", match);
+    s.hidden = !match;
   });
 }
 
