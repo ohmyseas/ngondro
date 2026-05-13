@@ -596,7 +596,7 @@
     </div>
     <div class="stat">
       <div class="num" id="stat-pct">0%</div>
-      <div class="lbl">Прогресс ДЧЖ</div>
+      <div class="lbl">Прогресс</div>
     </div>
     <div style="grid-column: 1 / -1">
       <div class="progress-bar"><div id="bar-overall" style="width:0%"></div></div>
@@ -1948,15 +1948,16 @@ function renderSectionNav() {
 
 function renderStats() {
   const sec = SECTIONS[activeSection()];
-  const sCircles = sectionCircles(activeSection());
-  const sTarget = sec.target;
-  const pct = Math.min(100, Math.round((sCircles / sTarget) * 100));
+  // Общий прогресс по всем 6 разделам (per-section % уже в верхней навигации).
+  const totalCircles = state.tuns.reduce((sum, t) => sum + (+t.circles || 0), 0);
+  const totalTarget = Object.values(SECTIONS).reduce((s, x) => s + x.target, 0);
+  const pct = totalTarget > 0 ? Math.min(100, Math.round((totalCircles / totalTarget) * 100)) : 0;
   $("#section-subtitle").textContent = sec.title;
   $("#stat-week").textContent = `${weekTuns()}/${state.setWeek}`;
   $("#stat-total").textContent = state.tuns.length;
   $("#stat-pct").textContent = `${pct}%`;
   $("#bar-overall").style.width = pct + "%";
-  $("#circles-text").textContent = `${sCircles} / ${sTarget} кругов · ${sec.short}`;
+  $("#circles-text").textContent = `${totalCircles} / ${totalTarget} кругов · все разделы`;
   $("#forecast").textContent = forecastWeeks();
 }
 
