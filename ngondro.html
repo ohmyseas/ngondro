@@ -82,8 +82,12 @@
   }
   .section-nav button.active .sec-pct { color: var(--ink-2); }
   @media (max-width: 480px) {
-    .section-nav button { font-size: 10px; padding: 6px 2px; }
-    .section-nav button .sec-num { width: 18px; height: 18px; font-size: 10px; }
+    /* Two rows of three on mobile — gives each button a real touch target (~110px) */
+    .section-nav { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .section-nav button { font-size: 12px; padding: 10px 6px; gap: 6px; }
+    .section-nav button .sec-num { width: 22px; height: 22px; font-size: 12px; }
+    .section-nav button .sec-name { font-size: 12px; }
+    .section-nav button .sec-pct { font-size: 11px; }
   }
 
   /* === stats card === */
@@ -229,12 +233,21 @@
   .vow-form {
     background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
     padding: 14px; margin-bottom: 14px;
-    display: grid; gap: 12px;
+    display: grid; gap: 12px; min-width: 0;
   }
-  .vow-form label { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; }
+  .vow-form label {
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+    font-size: 13px; font-weight: 600; min-width: 0;
+  }
   .vow-form input, .vow-form select {
     border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px;
-    background: var(--bg); flex: 1; min-width: 0; max-width: 60%;
+    background: var(--bg); flex: 1 1 auto; min-width: 0; max-width: 60%;
+  }
+  @media (max-width: 480px) {
+    /* Stack label text on top, control beneath at full width — long select option
+       names won't push the row beyond viewport */
+    .vow-form label { flex-direction: column; align-items: stretch; gap: 4px; }
+    .vow-form input, .vow-form select { max-width: 100%; width: 100%; }
   }
   .vow-text { margin: 14px 0; }
   label.confirm {
