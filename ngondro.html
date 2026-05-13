@@ -1439,12 +1439,8 @@ const S1_UNIQUE_LINES = {
     "Я так благодарен, что не нарушаю свои добродетельные обещания.",
     "Я так благодарен, что не нарушаю свои самаи.",
   ],
-  reasons: [
-    // Для 3 причин текста начитывания в PDF нет; используем краткие строки в духе раздела.
-    "Намо Буддая! Я так благодарен за добродетельную нравственность прошлых жизней, давшую мне это драгоценное человеческое тело.",
-    "Намо Буддая! Я так благодарен за добродетельную щедрость прошлых жизней, давшую мне это драгоценное человеческое тело.",
-    "Намо Буддая! Я так благодарен за добродетельные устремления прошлых жизней, давшие мне это драгоценное человеческое тело.",
-  ],
+  // reasons: для 3 причин нет начитывания — только размышление (концепция).
+  // 16 кругов на причину = 16 раундов размышления, без строк.
 };
 
 /* Раздел 2: 8 оснований — общий рефрен + уникальные строки */
@@ -1607,11 +1603,12 @@ const S6_PARTS = [
  */
 const RECITATIONS = (() => {
   const r = {};
-  // s1: 34 признака + 3 причины
+  // s1 признаки (34 шт): полные 15-строчные блоки начитывания.
+  // 3 причины ДЧЖ — без начитывания, только размышление; их в RECITATIONS НЕТ.
   for (const gk of Object.keys(S1_UNIQUE_LINES)) {
     r[gk] = S1_UNIQUE_LINES[gk].map((uniq, i) => ({
       title: ATTRS[gk].items[i],
-      lines: gk === "reasons" ? [uniq, ...STANDARD_BODY_S1] : s1Recitation(uniq),
+      lines: s1Recitation(uniq),
     }));
   }
   // s2 bases
@@ -2092,13 +2089,19 @@ function showText() {
   const name = g.items[idx];
   const stripe = g.color;
 
-  // Recitation: полные строки начитывания по PDF
+  // Recitation: полные строки начитывания по PDF.
+  // Для 3 причин ДЧЖ начитывания нет — только размышление по тексту Паттрула выше.
   const rec = (RECITATIONS[key] && RECITATIONS[key][idx]) || null;
   let recHtml = "";
   if (rec && rec.lines && rec.lines.length) {
     recHtml = `
       <div class="recit">
         <div class="recit-title">Строки начитывания (PDF)</div>${rec.lines.map(l => escapeHtml(l)).join("\n")}
+      </div>`;
+  } else if (g.isReason) {
+    recHtml = `
+      <div class="recit" style="font-style:italic;color:var(--ink-2)">
+        <div class="recit-title">Размышление</div>Для 3 причин ДЧЖ нет формальных строк начитывания — только размышление по тексту выше. Один круг = одно завершённое размышление.
       </div>`;
   }
 
@@ -2563,9 +2566,21 @@ function startMeditation() {
   m.bellRang = false;
   $("#med-title-h").textContent = `4 · Медитация · ${ATTRS[v.groupKey].title} #${v.idx + 1}`;
   $("#med-circles").textContent = "0";
-  // Show recitation text
+  // Show recitation text — или контемплятивную подсказку для 3 причин ДЧЖ
   const rec = RECITATIONS[v.groupKey] && RECITATIONS[v.groupKey][v.idx];
-  $("#med-recit-body").textContent = rec ? rec.lines.join("\n") : "(нет текста)";
+  const reading = READING[v.groupKey] || {};
+  const perItemText = (reading.perItem && reading.perItem[v.idx]) || reading.intro || "";
+  if (rec && rec.lines && rec.lines.length) {
+    $("#med-recit-body").textContent = rec.lines.join("\n");
+  } else if (ATTRS[v.groupKey].isReason) {
+    $("#med-recit-body").textContent =
+      "РАЗМЫШЛЕНИЕ (без начитывания)\n\n" +
+      ATTRS[v.groupKey].items[v.idx] + "\n\n" +
+      perItemText + "\n\n" +
+      "Один круг = одно завершённое размышление.";
+  } else {
+    $("#med-recit-body").textContent = perItemText || "(нет текста)";
+  }
   updateMedTimerDisplay();
   if (m.timer) clearInterval(m.timer);
   m.timer = setInterval(tickMed, 250);
@@ -2761,7 +2776,12 @@ $("#bell-banner-ok").addEventListener("click", () => {
   });
 
   // RECITATIONS: для каждого item каждого groupKey есть строки
+  // Исключение: 3 причины ДЧЖ — без начитывания (только размышление).
   for (const gk of Object.keys(ATTRS)) {
+    if (ATTRS[gk].isReason) {
+      assert(!RECITATIONS[gk], `RECITATIONS[${gk}]: для причин не должно быть начитывания`);
+      continue;
+    }
     const items = ATTRS[gk].items;
     const recs = RECITATIONS[gk];
     assert(Array.isArray(recs), `RECITATIONS[${gk}]: массив`);
@@ -2782,6 +2802,10 @@ $("#bell-banner-ok").addEventListener("click", () => {
       assert(rec.lines.length === 15, `${gk}[${i}]: 15 строк (есть ${rec.lines.length})`);
     });
   });
+
+  // 3 причины ДЧЖ — без начитывания, только размышление
+  assert(ATTRS.reasons.isReason === true, "reasons: isReason=true");
+  assert(!RECITATIONS.reasons, "reasons: нет блока начитывания");
 
   // Миграция: dry-run на тестовых tuns
   const test = { tuns: [
