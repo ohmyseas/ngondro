@@ -99,17 +99,197 @@
   .progress-bar { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; margin-top: 8px; }
   .progress-bar > div { height: 100%; background: linear-gradient(90deg, var(--c-blue), var(--c-green) 35%, var(--c-yellow) 65%, var(--c-red)); border-radius: 999px; transition: width .3s; }
 
-  /* === big CTA === */
+  /* === CTA row === */
+  .cta-row { display: grid; grid-template-columns: 2fr 1fr; gap: 8px; margin-bottom: 14px; }
   .cta {
-    width: 100%; padding: 14px 16px; border: 0; border-radius: var(--r);
-    background: var(--ink); color: var(--bg);
-    font-size: 15px; font-weight: 600; letter-spacing: .01em;
+    padding: 14px 16px; border: 0; border-radius: var(--r);
+    font-weight: 600; letter-spacing: .01em;
     box-shadow: var(--shadow);
     display: flex; align-items: center; justify-content: center; gap: 8px;
-    margin-bottom: 14px;
+    cursor: pointer; transition: transform .12s, box-shadow .12s;
   }
-  .cta:hover { background: #000; }
+  .cta-primary { background: var(--ink); color: var(--bg); font-size: 16px; }
+  .cta-primary:hover { background: #000; transform: translateY(-1px); }
+  .cta-secondary { background: var(--bg-2); color: var(--ink-2); font-size: 13px; border: 1px solid var(--line); }
+  .cta-secondary:hover { background: var(--bg); color: var(--ink); }
   .cta svg { display: block }
+  @media (max-width: 480px) {
+    .cta-row { grid-template-columns: 1fr; }
+    .cta-primary { font-size: 15px; }
+    .cta-secondary { font-size: 12px; padding: 10px 12px; }
+  }
+
+  /* === Wizard (Начать тхун) === */
+  .wizard-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(20, 16, 10, .55); backdrop-filter: blur(4px);
+    display: flex; align-items: stretch; justify-content: center;
+  }
+  .wizard-overlay[hidden] { display: none; }
+  .wizard {
+    width: 100%; max-width: 720px; margin: 0 auto;
+    background: var(--bg); display: flex; flex-direction: column;
+    max-height: 100vh; overflow: hidden;
+  }
+  .wizard-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 16px; border-bottom: 1px solid var(--line); background: var(--bg-2);
+    flex-shrink: 0;
+  }
+  .wizard-close {
+    background: transparent; border: 0; font-size: 24px; color: var(--ink-3);
+    width: 32px; height: 32px; border-radius: 50%; cursor: pointer; line-height: 1;
+  }
+  .wizard-close:hover { background: var(--line); color: var(--ink); }
+  .wizard-title { font-weight: 600; font-size: 16px; }
+  .wizard-stepper { display: flex; gap: 6px; margin-left: auto; }
+  .wizard-stepper .step {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--line); color: var(--ink-3); font-size: 11px; font-weight: 700;
+    transition: background .2s;
+  }
+  .wizard-stepper .step.active { background: var(--c-blue); color: #fff; }
+  .wizard-stepper .step.done { background: var(--c-green); color: #fff; }
+  .wizard-body {
+    flex: 1 1 auto; overflow-y: auto;
+    padding: 18px 16px 100px;
+  }
+  .wizard-step h2 { font-size: 18px; margin: 0 0 12px; }
+  .wizard-step .hint { font-size: 13px; color: var(--ink-3); margin: 0 0 16px; }
+  .prep-checklist { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .prep-checklist li {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .prep-checklist label {
+    display: flex; gap: 10px; align-items: flex-start; cursor: pointer;
+    font-size: 14px; line-height: 1.45;
+  }
+  .prep-checklist input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; }
+  .prep-stage {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 10px;
+  }
+  .prep-stage h3 { font-size: 14px; margin: 0 0 4px; }
+  .prep-stage .stage-desc { font-size: 12px; color: var(--ink-3); margin: 0 0 8px; }
+  .prep-stage > label { display: flex; gap: 8px; align-items: center; font-size: 13px; cursor: pointer; }
+  .prep-stage details { margin: 8px 0; }
+  .prep-stage details summary { font-size: 12px; color: var(--ink-2); cursor: pointer; user-select: none; }
+  .liturgy-inline {
+    font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+    font-size: 14px; line-height: 1.65; color: var(--ink);
+    white-space: pre-wrap; background: var(--bg); border-radius: 8px;
+    padding: 10px 12px; margin-top: 6px;
+  }
+  .shamatha-controls {
+    display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0;
+  }
+  .shamatha-controls input[type="number"] {
+    width: 60px; border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; background: var(--bg);
+  }
+  .btn-small {
+    background: var(--ink); color: var(--bg); border: 0; border-radius: 8px;
+    padding: 6px 12px; font-size: 12px; font-weight: 600; cursor: pointer;
+  }
+  .btn-small:hover { background: #000; }
+  .mini-timer {
+    font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+    font-size: 18px; font-weight: 600; color: var(--c-blue); font-variant-numeric: tabular-nums;
+    min-width: 70px; text-align: center;
+  }
+  .vow-form {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px; margin-bottom: 14px;
+    display: grid; gap: 12px;
+  }
+  .vow-form label { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; font-weight: 600; }
+  .vow-form input, .vow-form select {
+    border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px;
+    background: var(--bg); flex: 1; min-width: 0; max-width: 60%;
+  }
+  .vow-text { margin: 14px 0; }
+  label.confirm {
+    display: flex; gap: 10px; align-items: center; padding: 12px 14px;
+    background: rgba(232,184,60,.15); border-radius: 10px; cursor: pointer;
+    font-weight: 600;
+  }
+  .med-timer-row {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px;
+  }
+  .med-timer {
+    font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+    font-size: 36px; font-weight: 700; color: var(--c-blue);
+    font-variant-numeric: tabular-nums; flex: 1;
+  }
+  .med-timer.paused { color: var(--ink-3); }
+  .med-timer-actions { display: flex; flex-direction: column; gap: 6px; }
+  .med-counter {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px;
+    align-items: center; margin-bottom: 16px;
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px;
+  }
+  .circ-btn {
+    background: var(--bg); border: 1px solid var(--line); border-radius: 12px;
+    font-size: 24px; font-weight: 700; padding: 14px; cursor: pointer;
+    color: var(--ink);
+  }
+  .circ-btn:active { background: var(--line); }
+  .circ-display { text-align: center; }
+  .circ-num { font-family: "Iowan Old Style", "Charter", "Georgia", serif; font-size: 32px; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .circ-label { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; }
+  .med-recit {
+    background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px; max-height: 320px; overflow-y: auto;
+    font-family: "Iowan Old Style", "Charter", "Georgia", serif;
+    font-size: 15px; line-height: 1.7; white-space: pre-wrap;
+  }
+  .finish-block {
+    background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 12px;
+  }
+  .finish-block h3 { font-size: 14px; margin: 0 0 8px; }
+  .finish-block label { display: block; font-size: 12px; color: var(--ink-3); margin-top: 8px; }
+  .finish-block textarea {
+    width: 100%; border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 10px; background: var(--bg); font-family: inherit; font-size: 13px;
+    resize: vertical; margin-top: 4px;
+  }
+  .feel-stars { display: flex; gap: 4px; margin-top: 8px; }
+  .feel-stars button {
+    background: transparent; border: 0; font-size: 28px; cursor: pointer;
+    color: var(--line); padding: 4px 6px;
+  }
+  .feel-stars button.on, .feel-stars button:hover { color: var(--c-yellow); }
+  .wizard-footer {
+    border-top: 1px solid var(--line); background: var(--bg-2);
+    padding: 12px 16px; display: flex; gap: 8px; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .wizard-footer button {
+    flex: 1; padding: 12px 16px; border-radius: 10px;
+    font-size: 14px; font-weight: 600; cursor: pointer; border: 0;
+  }
+  .btn-primary { background: var(--ink); color: var(--bg); }
+  .btn-primary:hover { background: #000; }
+  .btn-primary:disabled { background: var(--ink-3); cursor: not-allowed; opacity: .6; }
+  .btn-secondary { background: var(--bg); border: 1px solid var(--line); color: var(--ink-2); }
+  .btn-secondary:hover { background: var(--line); }
+  .bell-banner {
+    position: fixed; inset: 0; background: rgba(46,92,138,.92); color: #fff;
+    z-index: 200; display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px; text-align: center; padding: 24px;
+    backdrop-filter: blur(8px);
+  }
+  .bell-banner h2 { font-size: 22px; margin: 0 0 8px; color: #fff; }
+  .bell-banner p { margin: 0; font-size: 14px; max-width: 360px; line-height: 1.5; opacity: .9; }
+  .bell-banner button {
+    margin-top: 8px; padding: 12px 24px; border-radius: 10px;
+    background: #fff; color: var(--c-blue); font-weight: 700; font-size: 14px; border: 0; cursor: pointer;
+  }
 
   /* === tabs === */
   .tabs {
@@ -398,11 +578,16 @@
     </div>
   </section>
 
-  <!-- CTA -->
-  <button class="cta" id="btn-add">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-    Записать тхун
-  </button>
+  <!-- CTA row -->
+  <div class="cta-row">
+    <button class="cta cta-primary" id="btn-start-thun">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Начать тхун
+    </button>
+    <button class="cta cta-secondary" id="btn-add">
+      Записать задним числом
+    </button>
+  </div>
 
   <!-- Tabs -->
   <nav class="tabs" role="tablist">
@@ -563,6 +748,215 @@
 
     <button class="save" id="f-save">Сохранить тхун</button>
   </div>
+</div>
+
+<!-- ============================================================
+     ВИЗАРД «Начать тхун» — 5 шагов: Приготовления → Подготовка →
+     Обет → Медитация → Завершение
+     ============================================================ -->
+<div class="wizard-overlay" id="wizard-overlay" hidden>
+  <div class="wizard">
+    <header class="wizard-header">
+      <button class="wizard-close" id="wizard-close" aria-label="Закрыть">×</button>
+      <div class="wizard-title">Тхун</div>
+      <div class="wizard-stepper">
+        <span class="step active" data-step="1">1</span>
+        <span class="step" data-step="2">2</span>
+        <span class="step" data-step="3">3</span>
+        <span class="step" data-step="4">4</span>
+        <span class="step" data-step="5">5</span>
+      </div>
+    </header>
+
+    <main class="wizard-body" id="wizard-body">
+
+      <!-- Шаг 1: Приготовления -->
+      <section class="wizard-step" data-step="1">
+        <h2>1 · Приготовления</h2>
+        <p class="hint">Подготовь место и тело до начала тхуна. Не давай приготовлениям решать, делать тхун или нет — лучше сделать тхун без некоторых, чем отложить навсегда.</p>
+        <ul class="prep-checklist">
+          <li><label><input type="checkbox" data-prep="place"> Место чистое, свежий воздух и свет, звукоизоляция, ограничен доступ</label></li>
+          <li><label><input type="checkbox" data-prep="devices"> Телефон без звука; электрические, газовые, водные устройства выключены</label></li>
+          <li><label><input type="checkbox" data-prep="tools"> Подношения на алтаре, подушка / стул, чётки, тексты, часы</label></li>
+          <li><label><input type="checkbox" data-prep="body"> Туалет, нос, тёплая одежда, плед для ног, вода в чашке / термосе</label></li>
+          <li><label><input type="checkbox" data-prep="content"> Решено: какая медитация, сколько и как</label></li>
+        </ul>
+      </section>
+
+      <!-- Шаг 2: Подготовка тела, речи, ума -->
+      <section class="wizard-step" data-step="2" hidden>
+        <h2>2 · Подготовка</h2>
+        <p class="hint">Подготовь тело, речь и ум. Шаматха — основная часть; остальное короче.</p>
+
+        <div class="prep-stage">
+          <h3>Тело · семичастная поза Вайрочаны</h3>
+          <p class="stage-desc">Спина прямая. На подушке или стуле (при проблемах с ногами).</p>
+          <label><input type="checkbox" data-prep="pose"> Принял позу</label>
+        </div>
+
+        <div class="prep-stage">
+          <h3>Тело · шаматха</h3>
+          <p class="stage-desc">6 минут по умолчанию; дольше — для успокоения особо взволнованного ума. Диапазон 3–30 мин.</p>
+          <div class="shamatha-controls">
+            <label>Длительность:
+              <input type="number" id="shamatha-min" min="3" max="30" step="1" value="6">
+            </label>
+            <button id="shamatha-start" class="btn-small" type="button">Запустить</button>
+            <span id="shamatha-timer" class="mini-timer">06:00</span>
+          </div>
+          <label><input type="checkbox" data-prep="shamatha"> Шаматха завершена</label>
+        </div>
+
+        <div class="prep-stage">
+          <h3>Речь · девятичастное дыхание</h3>
+          <p class="stage-desc">Три цикла по три вдоха-выдоха. Дыхание — это речь.</p>
+          <label><input type="checkbox" data-prep="breath"> Дыхание выполнено</label>
+        </div>
+
+        <div class="prep-stage">
+          <h3>Ум · молитва мастерам линии передачи</h3>
+          <div class="liturgy-inline">Лама Чхен Лама Чхен Лама Чхенно!
+(3 раза)</div>
+          <label><input type="checkbox" data-prep="masters"> Прочитано</label>
+        </div>
+
+        <div class="prep-stage">
+          <h3>Ум · принятие прибежища</h3>
+          <details><summary>Текст</summary><div class="liturgy-inline" data-liturgy="refuge"></div></details>
+          <label><input type="checkbox" data-prep="refuge"> Прочитано</label>
+        </div>
+
+        <div class="prep-stage">
+          <h3>Ум · взращивание четырёх безмерных</h3>
+          <details><summary>Текст</summary><div class="liturgy-inline" data-liturgy="four_immeasurables"></div></details>
+          <label><input type="checkbox" data-prep="four"> Прочитано</label>
+        </div>
+
+        <div class="prep-stage">
+          <h3>Ум · зарождение Бодхичитты</h3>
+          <details><summary>Текст</summary><div class="liturgy-inline" data-liturgy="bodhichitta"></div></details>
+          <label><input type="checkbox" data-prep="bodhi"> Прочитано</label>
+        </div>
+
+        <div class="prep-stage">
+          <h3>Ум · благословение Коренного Мастера (семистрочная)</h3>
+          <details><summary>Текст</summary><div class="liturgy-inline" data-liturgy="seven_line"></div></details>
+          <label><input type="checkbox" data-prep="blessing"> Прочитано</label>
+        </div>
+
+        <div class="prep-stage">
+          <h3>Ум · сущностные подготовительные строки нёндро</h3>
+          <details><summary>Текст</summary><div class="liturgy-inline" data-liturgy="essential_lines"></div></details>
+          <label><input type="checkbox" data-prep="essential"> Прочитано</label>
+        </div>
+      </section>
+
+      <!-- Шаг 3: Обет -->
+      <section class="wizard-step" data-step="3" hidden>
+        <h2>3 · Обет совершить тхун</h2>
+        <p class="hint">Чёткое намерение: длительность, признак, ориентир по кругам. Обет — серьёзно. Чем дольше его не нарушаешь, тем легче хранить.</p>
+        <div class="vow-form">
+          <label>Длительность тхуна (мин):
+            <input type="number" id="vow-length" min="5" max="180" value="48">
+          </label>
+          <label>Признак / часть раздела:
+            <select id="vow-attr"></select>
+          </label>
+          <label>Стратегия:
+            <span id="vow-strategy">—</span>
+          </label>
+          <label>Ориентир кругов:
+            <span id="vow-circles">—</span>
+          </label>
+        </div>
+        <div class="vow-text">
+          <div class="liturgy-inline" id="vow-text-body"></div>
+        </div>
+        <label class="confirm"><input type="checkbox" id="vow-confirm"> Я даю этот обет</label>
+      </section>
+
+      <!-- Шаг 4: Медитация -->
+      <section class="wizard-step" data-step="4" hidden>
+        <h2 id="med-title-h">4 · Медитация</h2>
+        <div class="med-timer-row">
+          <div class="med-timer" id="med-timer">48:00</div>
+          <div class="med-timer-actions">
+            <button id="med-pause" class="btn-small" type="button">Пауза</button>
+            <button id="med-bell-test" class="btn-small" type="button" style="background:var(--bg);color:var(--ink-2);border:1px solid var(--line)">Бэлл</button>
+          </div>
+        </div>
+        <div class="med-counter">
+          <button id="med-circ-minus" class="circ-btn" type="button">−</button>
+          <div class="circ-display">
+            <div class="circ-num" id="med-circles">0</div>
+            <div class="circ-label">кругов</div>
+          </div>
+          <button id="med-circ-plus" class="circ-btn" type="button">+</button>
+        </div>
+        <div class="med-recit recit" id="med-recit-body"></div>
+      </section>
+
+      <!-- Шаг 5: Завершение -->
+      <section class="wizard-step" data-step="5" hidden>
+        <h2>5 · Завершение</h2>
+        <p class="hint">Минуту-две на самопроверку и посвящение. Не формально.</p>
+
+        <div class="finish-block">
+          <h3>Самопроверка</h3>
+          <label>Ошибки / отвлечения:
+            <textarea id="finish-mistakes" rows="2" placeholder="Что пошло не так, где были отвлечения…"></textarea>
+          </label>
+          <label>Успехи / прозрения:
+            <textarea id="finish-successes" rows="2" placeholder="Новые переживания, прозрения, удавшееся…"></textarea>
+          </label>
+        </div>
+
+        <div class="finish-block">
+          <h3>Посвящение заслуг</h3>
+          <details><summary>Текст молитвы</summary>
+            <div class="liturgy-inline" data-liturgy="dedication"></div>
+          </details>
+          <label>Устремление (для себя / других):
+            <textarea id="finish-aspiration" rows="1" placeholder="Добродетельное желание…"></textarea>
+          </label>
+          <label>Обещание (новое или прежнее):
+            <textarea id="finish-promise" rows="1" placeholder="Добродетельное обещание…"></textarea>
+          </label>
+        </div>
+
+        <div class="finish-block">
+          <h3>Чувство</h3>
+          <div class="feel-stars" id="finish-feel" role="radiogroup">
+            <button type="button" data-feel="1" aria-label="1">★</button>
+            <button type="button" data-feel="2" aria-label="2">★</button>
+            <button type="button" data-feel="3" aria-label="3">★</button>
+            <button type="button" data-feel="4" aria-label="4">★</button>
+            <button type="button" data-feel="5" aria-label="5">★</button>
+          </div>
+        </div>
+
+        <div class="finish-block">
+          <label>Заметка (необязательно):
+            <textarea id="finish-note" rows="2" placeholder="Что хочется зафиксировать…"></textarea>
+          </label>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="wizard-footer">
+      <button id="wizard-prev" class="btn-secondary" type="button">Назад</button>
+      <button id="wizard-next" class="btn-primary" type="button">Далее</button>
+      <button id="wizard-save" class="btn-primary" type="button" hidden>Сохранить тхун</button>
+    </footer>
+  </div>
+</div>
+
+<!-- Бэлл-баннер на истечение таймера -->
+<div class="bell-banner" id="bell-banner" hidden>
+  <h2>Тхун завершён</h2>
+  <p>Поздравляю. Время перейти к самопроверке и посвящению заслуг.</p>
+  <button id="bell-banner-ok" type="button">Перейти к завершению</button>
 </div>
 
 <script>
@@ -1405,7 +1799,12 @@ function loadState() {
   try {
     const raw = localStorage.getItem(STORE_KEY);
     if (!raw) return defaultState();
-    return migrateState(Object.assign(defaultState(), JSON.parse(raw)));
+    const s = migrateState(Object.assign(defaultState(), JSON.parse(raw)));
+    // Persist immediately after migration to avoid repeated runs on every load
+    if (raw !== JSON.stringify(s)) {
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (_) {}
+    }
+    return s;
   } catch (e) { return defaultState(); }
 }
 function saveState() { localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
@@ -1823,6 +2222,416 @@ renderLiturgy();
 renderAll();
 
 /* ============================================================
+ *  WEB AUDIO BELL — мягкий тон поющей чаши
+ *  Несколько синусоидальных гармоник с экспоненциальным
+ *  затуханием. Без внешних сэмплов.
+ * ========================================================== */
+let _audioCtx = null;
+function getAudioCtx() {
+  if (!_audioCtx) {
+    try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch (e) { console.warn("Web Audio недоступен", e); return null; }
+  }
+  if (_audioCtx.state === "suspended") _audioCtx.resume();
+  return _audioCtx;
+}
+
+function ringBell({ pitch = 392, duration = 6 } = {}) {
+  // pitch = 392 Hz (G4) — тёплый средний регистр, ближе к маленькой поющей чаше
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  const master = ctx.createGain();
+  master.gain.value = 0.45;
+  master.connect(ctx.destination);
+  // Гармоники характерные для бронзовой чаши: 1 / 2.76 / 5.4 / 8.93 / 13.34 (упрощено)
+  const partials = [
+    { mul: 1.00, gain: 0.50, dur: duration },
+    { mul: 2.00, gain: 0.30, dur: duration * 0.75 },
+    { mul: 2.76, gain: 0.20, dur: duration * 0.65 },
+    { mul: 4.10, gain: 0.10, dur: duration * 0.55 },
+    { mul: 5.40, gain: 0.06, dur: duration * 0.45 },
+  ];
+  partials.forEach(p => {
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = pitch * p.mul;
+    g.gain.setValueAtTime(0, now);
+    g.gain.linearRampToValueAtTime(p.gain, now + 0.015);                     // быстрая атака
+    g.gain.exponentialRampToValueAtTime(0.0001, now + p.dur);                // долгое затухание
+    osc.connect(g); g.connect(master);
+    osc.start(now);
+    osc.stop(now + p.dur);
+  });
+  // Лёгкая «дыхательная» субмодуляция громкости — как у живой чаши
+  const lfo = ctx.createOscillator();
+  const lfoGain = ctx.createGain();
+  lfo.frequency.value = 4.2;
+  lfoGain.gain.value = 0.04;
+  lfo.connect(lfoGain); lfoGain.connect(master.gain);
+  lfo.start(now); lfo.stop(now + duration);
+}
+
+/* ============================================================
+ *  WIZARD — «Начать тхун»
+ *  Стейт визарда живёт в локальной переменной (не в state),
+ *  пока не сохранён — затем превращается в state.tuns запись.
+ * ========================================================== */
+const wizardState = {
+  step: 1,
+  prep: {},                  // checkboxes step 1+2
+  shamathaMin: 6,
+  shamathaTimer: null,
+  shamathaRemaining: 0,
+  vow: {
+    length: 48,
+    groupKey: "freedoms",
+    idx: 0,
+    targetCircles: 0,
+    confirmed: false,
+  },
+  med: {
+    timer: null,
+    startedAt: null,
+    elapsedBeforePause: 0,
+    paused: false,
+    durationSec: 48 * 60,
+    circles: 0,
+    bellRang: false,
+  },
+  finish: {
+    mistakes: "", successes: "",
+    aspiration: "", promise: "",
+    feel: 0, note: "",
+  },
+};
+
+function openWizard() {
+  // reset
+  wizardState.step = 1;
+  wizardState.prep = {};
+  wizardState.shamathaMin = state.shamathaMin || 6;
+  wizardState.shamathaRemaining = 0;
+  wizardState.vow.length = state.setLength || 48;
+  wizardState.vow.groupKey = state.activeSection ? firstGroupOfSection(state.activeSection) : "freedoms";
+  wizardState.vow.idx = 0;
+  wizardState.vow.confirmed = false;
+  wizardState.med = {
+    timer: null, startedAt: null, elapsedBeforePause: 0,
+    paused: false, durationSec: 48 * 60, circles: 0, bellRang: false,
+  };
+  wizardState.finish = { mistakes: "", successes: "", aspiration: "", promise: "", feel: 0, note: "" };
+
+  // populate liturgy inline blocks
+  $$('[data-liturgy]').forEach(el => {
+    const id = el.dataset.liturgy;
+    const lit = LITURGY.find(l => l.id === id);
+    if (lit) el.textContent = lit.body;
+  });
+
+  // shamatha defaults
+  $("#shamatha-min").value = wizardState.shamathaMin;
+  $("#shamatha-timer").textContent = formatMS(wizardState.shamathaMin * 60);
+
+  // populate vow attr select
+  populateVowAttrSelect();
+  $("#vow-length").value = wizardState.vow.length;
+
+  // reset checkboxes & form fields
+  $$('#wizard-overlay input[type="checkbox"]').forEach(c => c.checked = false);
+  ["finish-mistakes","finish-successes","finish-aspiration","finish-promise","finish-note"].forEach(id => {
+    const el = $("#" + id); if (el) el.value = "";
+  });
+  $$('#finish-feel button').forEach(b => b.classList.remove("on"));
+
+  showWizardStep(1);
+  $("#wizard-overlay").hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+function closeWizard() {
+  // Stop active timers
+  if (wizardState.shamathaTimer) { clearInterval(wizardState.shamathaTimer); wizardState.shamathaTimer = null; }
+  if (wizardState.med.timer) { clearInterval(wizardState.med.timer); wizardState.med.timer = null; }
+  $("#wizard-overlay").hidden = true;
+  $("#bell-banner").hidden = true;
+  document.body.style.overflow = "";
+}
+
+function firstGroupOfSection(sk) {
+  for (const gk of Object.keys(ATTRS)) {
+    if (ATTRS[gk].section === sk) return gk;
+  }
+  return "freedoms";
+}
+
+function showWizardStep(n) {
+  wizardState.step = n;
+  $$('.wizard-step').forEach(s => s.hidden = +s.dataset.step !== n);
+  $$('.wizard-stepper .step').forEach(s => {
+    const sn = +s.dataset.step;
+    s.classList.toggle("active", sn === n);
+    s.classList.toggle("done", sn < n);
+  });
+  $("#wizard-prev").disabled = (n === 1);
+  $("#wizard-next").hidden = (n === 5);
+  $("#wizard-save").hidden = (n !== 5);
+  // Step-specific entry handlers
+  if (n === 3) refreshVow();
+  if (n === 4) startMeditation();
+  if (n === 5) stopMeditation();
+}
+
+function formatMS(totalSec) {
+  const m = Math.floor(totalSec / 60), s = totalSec % 60;
+  return String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0");
+}
+
+/* === Step 2: шаматха-таймер === */
+function startShamatha() {
+  if (wizardState.shamathaTimer) {
+    clearInterval(wizardState.shamathaTimer);
+    wizardState.shamathaTimer = null;
+    $("#shamatha-start").textContent = "Запустить";
+    return;
+  }
+  const min = Math.max(3, Math.min(30, +$("#shamatha-min").value || 6));
+  wizardState.shamathaMin = min;
+  state.shamathaMin = min; saveState();
+  wizardState.shamathaRemaining = min * 60;
+  $("#shamatha-timer").textContent = formatMS(wizardState.shamathaRemaining);
+  $("#shamatha-start").textContent = "Стоп";
+  wizardState.shamathaTimer = setInterval(() => {
+    wizardState.shamathaRemaining--;
+    $("#shamatha-timer").textContent = formatMS(Math.max(0, wizardState.shamathaRemaining));
+    if (wizardState.shamathaRemaining <= 0) {
+      clearInterval(wizardState.shamathaTimer);
+      wizardState.shamathaTimer = null;
+      $("#shamatha-start").textContent = "Запустить";
+      ringBell({ pitch: 523, duration: 4 }); // более высокий, короткий — для шаматхи
+      $("#shamatha-timer").textContent = "✓";
+      const cb = document.querySelector('input[data-prep="shamatha"]');
+      if (cb) cb.checked = true;
+    }
+  }, 1000);
+}
+
+/* === Step 3: визард обета === */
+function populateVowAttrSelect() {
+  const sel = $("#vow-attr");
+  let html = "";
+  for (const sk of Object.keys(SECTIONS)) {
+    const sec = SECTIONS[sk];
+    for (const key of Object.keys(ATTRS)) {
+      const g = ATTRS[key]; if (g.section !== sk) continue;
+      html += `<optgroup label="${sec.num}. ${sec.short} · ${g.title}">`;
+      g.items.forEach((name, i) => {
+        html += `<option value="${key}:${i}">${i + 1}. ${escapeHtml(name)}</option>`;
+      });
+      html += `</optgroup>`;
+    }
+  }
+  sel.innerHTML = html;
+  sel.value = wizardState.vow.groupKey + ":" + wizardState.vow.idx;
+  sel.onchange = () => {
+    const [k, i] = sel.value.split(":");
+    wizardState.vow.groupKey = k;
+    wizardState.vow.idx = +i;
+    refreshVow();
+  };
+  $("#vow-length").onchange = () => {
+    wizardState.vow.length = Math.max(5, Math.min(180, +$("#vow-length").value || 48));
+    refreshVow();
+  };
+  $("#vow-confirm").onchange = e => {
+    wizardState.vow.confirmed = e.target.checked;
+  };
+}
+
+function refreshVow() {
+  const v = wizardState.vow;
+  const stratLabel = state.strategy === "2" ? "25/75 (Стратегия 2)" : "Классическая (Стратегия 1)";
+  const targetCircles = state.strategy === "2" ? 7 : 10;
+  v.targetCircles = targetCircles;
+  $("#vow-strategy").textContent = stratLabel;
+  $("#vow-circles").textContent = targetCircles + " (Техника 1, дефолт)";
+  // Format vow text with placeholders filled
+  const endTime = new Date(Date.now() + v.length * 60 * 1000);
+  const endHM = String(endTime.getHours()).padStart(2,"0") + ":" + String(endTime.getMinutes()).padStart(2,"0");
+  const vowLit = LITURGY.find(l => l.id === "vow").body;
+  const filled = vowLit
+    .replace("XX:XX", endHM)
+    .replace("X минут / часов", v.length + " мин");
+  $("#vow-text-body").textContent = filled;
+}
+
+/* === Step 4: медитация === */
+function startMeditation() {
+  const v = wizardState.vow;
+  const m = wizardState.med;
+  m.durationSec = v.length * 60;
+  m.circles = 0;
+  m.startedAt = Date.now();
+  m.elapsedBeforePause = 0;
+  m.paused = false;
+  m.bellRang = false;
+  $("#med-title-h").textContent = `4 · Медитация · ${ATTRS[v.groupKey].title} #${v.idx + 1}`;
+  $("#med-circles").textContent = "0";
+  // Show recitation text
+  const rec = RECITATIONS[v.groupKey] && RECITATIONS[v.groupKey][v.idx];
+  $("#med-recit-body").textContent = rec ? rec.lines.join("\n") : "(нет текста)";
+  updateMedTimerDisplay();
+  if (m.timer) clearInterval(m.timer);
+  m.timer = setInterval(tickMed, 250);
+}
+
+function tickMed() {
+  const m = wizardState.med;
+  if (m.paused) return;
+  const elapsedNow = m.elapsedBeforePause + (Date.now() - m.startedAt) / 1000;
+  const remaining = m.durationSec - elapsedNow;
+  if (remaining <= 0 && !m.bellRang) {
+    m.bellRang = true;
+    ringBell({ pitch: 392, duration: 7 });
+    showBellBanner();
+  }
+  updateMedTimerDisplay(Math.max(0, remaining));
+}
+
+function updateMedTimerDisplay(remaining) {
+  if (remaining === undefined) {
+    const m = wizardState.med;
+    const elapsedNow = m.elapsedBeforePause + (m.paused ? 0 : (Date.now() - m.startedAt) / 1000);
+    remaining = Math.max(0, m.durationSec - elapsedNow);
+  }
+  $("#med-timer").textContent = formatMS(Math.ceil(remaining));
+  $("#med-timer").classList.toggle("paused", wizardState.med.paused);
+}
+
+function stopMeditation() {
+  const m = wizardState.med;
+  if (m.timer) { clearInterval(m.timer); m.timer = null; }
+}
+
+function pauseMeditation() {
+  const m = wizardState.med;
+  if (m.paused) {
+    m.startedAt = Date.now();
+    m.paused = false;
+    $("#med-pause").textContent = "Пауза";
+  } else {
+    m.elapsedBeforePause += (Date.now() - m.startedAt) / 1000;
+    m.paused = true;
+    $("#med-pause").textContent = "Продолжить";
+  }
+}
+
+function showBellBanner() {
+  $("#bell-banner").hidden = false;
+}
+
+/* === Step 5: завершение → save tun === */
+function setFinishFeel(n) {
+  wizardState.finish.feel = n;
+  $$('#finish-feel button').forEach(b => b.classList.toggle("on", +b.dataset.feel <= n));
+}
+
+function collectFinish() {
+  wizardState.finish.mistakes   = $("#finish-mistakes").value.trim();
+  wizardState.finish.successes  = $("#finish-successes").value.trim();
+  wizardState.finish.aspiration = $("#finish-aspiration").value.trim();
+  wizardState.finish.promise    = $("#finish-promise").value.trim();
+  wizardState.finish.note       = $("#finish-note").value.trim();
+}
+
+function saveWizardTun() {
+  collectFinish();
+  const v = wizardState.vow;
+  const m = wizardState.med;
+  const f = wizardState.finish;
+  const tun = {
+    id: "w" + Date.now().toString(36),
+    date: new Date().toISOString().slice(0,10),
+    length: v.length,
+    groupKey: v.groupKey,
+    idx: v.idx,
+    tech: "1",
+    circles: m.circles,
+    prostr: 0,
+    feel: f.feel || 3,
+    note: f.note,
+    selfCheck: { mistakes: f.mistakes, successes: f.successes },
+    dedication: { aspiration: f.aspiration, promise: f.promise },
+    fromWizard: true,
+  };
+  state.tuns.unshift(tun);
+  saveState();
+  renderAll();
+  closeWizard();
+}
+
+/* === Validation per step (Далее →) === */
+function canAdvance() {
+  const s = wizardState.step;
+  if (s === 1) {
+    // Не блокируем, но рекомендуем все чекбоксы (мягкая валидация)
+    return true;
+  }
+  if (s === 2) {
+    // Тоже мягко
+    return true;
+  }
+  if (s === 3) {
+    return wizardState.vow.confirmed;
+  }
+  if (s === 4) {
+    return true;
+  }
+  return true;
+}
+
+/* === Wizard event wiring === */
+$("#btn-start-thun").addEventListener("click", () => {
+  getAudioCtx(); // unlock audio on user gesture
+  openWizard();
+});
+$("#wizard-close").addEventListener("click", () => {
+  if (confirm("Закрыть тхун без сохранения?")) closeWizard();
+});
+$("#wizard-prev").addEventListener("click", () => {
+  if (wizardState.step > 1) showWizardStep(wizardState.step - 1);
+});
+$("#wizard-next").addEventListener("click", () => {
+  if (!canAdvance()) {
+    if (wizardState.step === 3) alert("Сначала дай обет — отметь чекбокс «Я даю этот обет».");
+    return;
+  }
+  if (wizardState.step < 5) showWizardStep(wizardState.step + 1);
+});
+$("#wizard-save").addEventListener("click", saveWizardTun);
+
+$("#shamatha-start").addEventListener("click", startShamatha);
+
+$("#med-pause").addEventListener("click", pauseMeditation);
+$("#med-bell-test").addEventListener("click", () => ringBell({ pitch: 392, duration: 5 }));
+$("#med-circ-plus").addEventListener("click", () => {
+  wizardState.med.circles++;
+  $("#med-circles").textContent = wizardState.med.circles;
+});
+$("#med-circ-minus").addEventListener("click", () => {
+  wizardState.med.circles = Math.max(0, wizardState.med.circles - 1);
+  $("#med-circles").textContent = wizardState.med.circles;
+});
+
+$$('#finish-feel button').forEach(b => b.addEventListener("click", () => setFinishFeel(+b.dataset.feel)));
+
+$("#bell-banner-ok").addEventListener("click", () => {
+  $("#bell-banner").hidden = true;
+  showWizardStep(5);
+});
+
+/* ============================================================
  *  ТЕСТЫ — самопроверка при загрузке
  *  Все проверки должны проходить, иначе показывается баннер.
  * ========================================================== */
@@ -1923,6 +2732,30 @@ renderAll();
 
   // Раздел 5 — 7 свобод
   assert(ATTRS.nirvanaFreedoms.items.length === 7, "nirvanaFreedoms: 7 свобод");
+
+  // Wizard: ID-обязательные LITURGY элементы
+  ["masters","refuge","four_immeasurables","bodhichitta","seven_line","essential_lines","vow","dedication"].forEach(id => {
+    assert(LITURGY.some(l => l.id === id), `LITURGY содержит id=${id}`);
+  });
+
+  // Wizard: HTML-узлы существуют (DOM-структура)
+  ["#wizard-overlay","#btn-start-thun","#wizard-prev","#wizard-next","#wizard-save",
+   "#med-timer","#med-circles","#shamatha-timer","#vow-text-body","#bell-banner",
+   "#finish-mistakes","#finish-successes","#finish-aspiration","#finish-promise","#finish-feel"
+  ].forEach(sel => {
+    assert(document.querySelector(sel), `Wizard DOM: ${sel}`);
+  });
+
+  // Wizard: 5 шагов в визарде
+  assert(document.querySelectorAll('.wizard-step').length === 5, "5 шагов в визарде");
+
+  // Wizard: Web Audio bell функция определена
+  assert(typeof ringBell === "function", "ringBell определён");
+  assert(typeof getAudioCtx === "function", "getAudioCtx определён");
+
+  // Wizard: state shamathaMin валиден
+  assert(typeof state.shamathaMin === "number" && state.shamathaMin >= 3 && state.shamathaMin <= 30,
+    `state.shamathaMin в [3..30] (есть ${state.shamathaMin})`);
 
   // Report
   if (fails.length) {
